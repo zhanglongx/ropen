@@ -14,6 +14,10 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
+      - name: Get the latest tag
+        id: get_tag
+        run: echo "::set-output name=tag::$(git describe --tags --abbrev=0)"
+
       - name: Set up Go environment
         uses: actions/setup-go@v3
         with:
@@ -34,8 +38,8 @@ jobs:
 
       - name: Create .deb package
         run: |
-          fpm -s dir -t deb -n ropen -v 1.0.0 -a ${{ matrix.arch }} \
-          --description "ropen Application"" \
+          fpm -s dir -t deb -n ropen -v ${{ env.VERSION }} -a ${{ matrix.arch }} \
+          --description "ropen Application" \
           --license "MIT" \
           --url "https://github.com/github.com/zhanglongx/ropen" \
           --vendor "Longxiao Zhang" \
@@ -47,7 +51,7 @@ jobs:
 
       - name: Create .rpm package
         run: |
-          fpm -s dir -t rpm -n ropen -v 1.0.0 -a ${{ matrix.arch }} \
+          fpm -s dir -t rpm -n ropen -v ${{ env.VERSION }} -a ${{ matrix.arch }} \
           --description "ropen Application" \
           --license "MIT" \
           --url "https://github.com/github.com/zhanglongx/ropen" \
