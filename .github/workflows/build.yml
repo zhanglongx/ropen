@@ -38,6 +38,20 @@ jobs:
           sudo apt-get install -y ruby ruby-dev rubygems build-essential
           sudo gem install --no-document fpm
 
+      - name: Create post-install script
+        run: |
+          echo '#!/bin/bash' > post-install.sh
+          echo 'sudo firewall-cmd --permanent --add-port=38080/tcp' >> post-install.sh
+          echo 'sudo firewall-cmd --reload' >> post-install.sh
+          chmod +x post-install.sh
+
+      - name: Create pre-remove script
+        run: |
+          echo '#!/bin/bash' > pre-remove.sh
+          echo 'sudo firewall-cmd --permanent --remove-port=38080/tcp' >> pre-remove.sh
+          echo 'sudo firewall-cmd --reload' >> pre-remove.sh
+          chmod +x pre-remove.sh
+
       - name: Create .deb package
         run: |
           fpm -s dir -t deb -n ropen -v ${{ env.tag }} -a ${{ matrix.arch }} \
@@ -58,6 +72,8 @@ jobs:
           --url "https://github.com/github.com/zhanglongx/ropen" \
           --vendor "Longxiao Zhang" \
           --maintainer "Longxiao Zhang <zhanglongx@gmail.com>" \
+          --after-install post-install.sh \
+          --before-remove pre-remove.sh \
           ropen-${{ matrix.arch }}=/usr/bin/ropen \
           certs/ropenCA.crt=/etc/ropen/ropenCA.crt \
           certs/ropenCA.key=/etc/ropen/ropenCA.key
