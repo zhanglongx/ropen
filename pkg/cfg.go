@@ -25,7 +25,7 @@ var Cfg Config = Config{
 	PreferIPs: []string{},
 }
 
-func LoadCfg(path string) error {
+func LoadCfg(path string) {
 	var candidates []string
 
 	if isFileExist(path) {
@@ -48,14 +48,11 @@ func LoadCfg(path string) error {
 	for _, c := range candidates {
 		if err := loadConfigFromFile(c); err == nil {
 			debug("loaded config from %v", c)
-			return nil
 		}
 	}
 
 	debug("failed to load config from %v, using embedded config",
 		candidates)
-
-	return nil
 }
 
 func isFileExist(path string) bool {

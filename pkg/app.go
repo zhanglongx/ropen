@@ -19,9 +19,7 @@ type App struct {
 }
 
 func NewApp(cfgPath string, port int) (*App, error) {
-	if err := LoadCfg(cfgPath); err != nil {
-		debug("failed to load config: %v", err)
-	}
+	LoadCfg(cfgPath)
 
 	// override options from users
 	if port > 0 {
@@ -78,7 +76,9 @@ func hasReadPermission(path string) (bool, error) {
 		}
 		return false, err
 	}
+
 	defer file.Close()
+
 	return true, nil
 }
 
