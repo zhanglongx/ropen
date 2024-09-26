@@ -44,8 +44,8 @@ func LoadCfg(path string) {
 		// cfg from HOME directory
 		if homeDir, err := os.UserHomeDir(); err == nil {
 			candidates = append(candidates,
-				filepath.Join(homeDir, CFG_DEFAULT_FILENAME),
-				filepath.Join(homeDir, CFG_DEFAULT_FILENAME2),
+				filepath.Join(homeDir, "."+CFG_DEFAULT_FILENAME),
+				filepath.Join(homeDir, "."+CFG_DEFAULT_FILENAME2),
 			)
 		}
 	}
