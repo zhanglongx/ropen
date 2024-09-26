@@ -33,9 +33,7 @@ go-build/
 *.tmp
 *.temp
 
-certs/
-
 ropen
 
-*.yml
-*.yaml
+/*.yml
+/*.yaml

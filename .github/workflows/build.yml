@@ -1,0 +1,67 @@
+name: Build and Package Go Project
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [amd64, arm64]
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Set up Go environment
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.22'
+
+      - name: Build binary
+        env:
+          GOOS: linux
+          GOARCH: ${{ matrix.arch }}
+        run: |
+          go build -o ropen-${{ matrix.arch }}
+
+      - name: Install FPM (Effing Package Management)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ruby ruby-dev rubygems build-essential
+          sudo gem install --no-document fpm
+
+      - name: Create .deb package
+        run: |
+          fpm -s dir -t deb -n ropen -v 1.0.0 -a ${{ matrix.arch }} \
+          --description "ropen Application"" \
+          --license "MIT" \
+          --url "https://github.com/github.com/zhanglongx/ropen" \
+          --vendor "Longxiao Zhang" \
+          --maintainer "Longxiao Zhang <zhanglongx@gmail.com>" \
+          --prefix /usr/local/bin \
+          ropen-${{ matrix.arch }} \
+          certs/ropenCA.crt=/etc/ropen/ropenCA.crt \
+          certs/ropenCA.key=/etc/ropen/ropenCA.key
+
+      - name: Create .rpm package
+        run: |
+          fpm -s dir -t rpm -n ropen -v 1.0.0 -a ${{ matrix.arch }} \
+          --description "ropen Application" \
+          --license "MIT" \
+          --url "https://github.com/github.com/zhanglongx/ropen" \
+          --vendor "Longxiao Zhang" \
+          --maintainer "Longxiao Zhang <zhanglongx@gmail.com>" \
+          --prefix /usr/local/bin \
+          ropen-${{ matrix.arch }} \
+          certs/ropenCA.crt=/etc/ropen/ropenCA.crt \
+          certs/ropenCA.key=/etc/ropen/ropenCA.key
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ropen-${{ matrix.arch }}
+          path: |
+            *.deb
+            *.rpm
