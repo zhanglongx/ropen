@@ -46,8 +46,7 @@ jobs:
           --url "https://github.com/github.com/zhanglongx/ropen" \
           --vendor "Longxiao Zhang" \
           --maintainer "Longxiao Zhang <zhanglongx@gmail.com>" \
-          --prefix /usr/local/bin \
-          ropen-${{ matrix.arch }} \
+          ropen-${{ matrix.arch }}=/usr/local/bin/ropen \
           certs/ropenCA.crt=/etc/ropen/ropenCA.crt \
           certs/ropenCA.key=/etc/ropen/ropenCA.key
 
@@ -59,8 +58,7 @@ jobs:
           --url "https://github.com/github.com/zhanglongx/ropen" \
           --vendor "Longxiao Zhang" \
           --maintainer "Longxiao Zhang <zhanglongx@gmail.com>" \
-          --prefix /usr/local/bin \
-          ropen-${{ matrix.arch }} \
+          ropen-${{ matrix.arch }}=/usr/local/bin/ropen \
           certs/ropenCA.crt=/etc/ropen/ropenCA.crt \
           certs/ropenCA.key=/etc/ropen/ropenCA.key
 
