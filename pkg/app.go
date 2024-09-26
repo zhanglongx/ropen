@@ -10,7 +10,7 @@ import (
 
 const (
 	APP_NAME    = "ropen"
-	APP_VERSION = "1.0.0"
+	APP_VERSION = "1.0.1"
 )
 
 type App struct {
