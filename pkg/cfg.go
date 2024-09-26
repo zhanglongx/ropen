@@ -53,6 +53,7 @@ func LoadCfg(path string) {
 	for _, c := range candidates {
 		if err := loadConfigFromFile(c); err == nil {
 			debug("loaded config from %v", c)
+			return
 		}
 	}
 
