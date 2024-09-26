@@ -74,12 +74,16 @@ jobs:
           asset_name: ropen_${{ env.tag }}_${{ matrix.arch }}.deb
           asset_content_type: application/octet-stream
 
+      - name: Find RPM asset
+        id: find_rpm
+        run: echo "asset_path=$(find . -name 'ropen-*.rpm')" >> $GITHUB_ENV
+
       - name: Upload RPM asset to GitHub Release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./ropen-${{ env.tag }}-1.${{ matrix.arch }}.rpm
-          asset_name: ropen-${{ env.tag }}-1.${{ matrix.arch }}.rpm
+          asset_path: ${{ env.asset_path }}
+          asset_name: $(basename ${{ env.asset_path }})
           asset_content_type: application/octet-stream
