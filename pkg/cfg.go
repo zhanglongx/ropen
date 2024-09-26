@@ -18,6 +18,11 @@ type Config struct {
 	Port int
 
 	PreferIPs []string
+
+	Issuer struct {
+		CAPath  string
+		KeyPath string
+	}
 }
 
 var Cfg Config = Config{

@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"crypto/tls"
 	"fmt"
 	"net/http"
 	"os"
@@ -38,8 +39,6 @@ func NewApp(cfgPath string, port int) (*App, error) {
 }
 
 func (a *App) Run(path string) error {
-	addr := fmt.Sprintf("%s:%d", a.ips[0], a.Config.Port)
-
 	info, err := os.Stat(path)
 	if err != nil {
 		return err
@@ -49,20 +48,50 @@ func (a *App) Run(path string) error {
 		return fmt.Errorf("no read permission on %s", path)
 	}
 
+	addr := fmt.Sprintf("%s:%d", a.ips[0], a.Config.Port)
+
+	var cert tls.Certificate
+	protocol := "http"
+	if a.Config.Issuer.CAPath != "" && a.Config.Issuer.KeyPath != "" {
+		if ca, err := NewCerts(a.Config.Issuer.CAPath,
+			a.Config.Issuer.KeyPath); err == nil {
+			if cert, err = ca.GenerateWebsiteCerts(a.ips[0]); err == nil {
+				protocol = "https"
+			} else {
+				debug("failed to generate website certificates: %v", err)
+			}
+		} else {
+			debug("failed to load CA certificates: %v", err)
+		}
+	}
+
 	if info.IsDir() {
-		debug("serving directory %s on: http://%s/",
-			path, addr)
+		fmt.Printf("serving directory %s on: %s://%s/",
+			path, protocol, addr)
 
 		http.Handle("/", http.FileServer(http.Dir(path)))
 	} else {
-		debug("serving file %s on: http://%s/%s",
-			path, addr, filepath.Base(path))
+		fmt.Printf("serving file %s on: %s://%s/%s",
+			path, protocol, addr, filepath.Base(path))
 
 		http.HandleFunc("/"+filepath.Base(path), fileHandlerHelper(path))
 	}
 
-	if err := http.ListenAndServe(addr, nil); err != nil {
-		return fmt.Errorf("failed to start HTTP server: %v", err)
+	if protocol == "https" {
+		server := &http.Server{
+			Addr:    addr,
+			Handler: nil,
+			TLSConfig: &tls.Config{
+				Certificates: []tls.Certificate{cert},
+			},
+		}
+		if err := server.ListenAndServeTLS("", ""); err != nil {
+			return fmt.Errorf("failed to start HTTPS server: %v", err)
+		}
+	} else {
+		if err := http.ListenAndServe(addr, nil); err != nil {
+			return fmt.Errorf("failed to start HTTP server: %v", err)
+		}
 	}
 
 	return nil

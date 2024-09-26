@@ -33,6 +33,8 @@ go-build/
 *.tmp
 *.temp
 
+certs/
+
 ropen
 
 *.yml
