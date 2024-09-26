@@ -66,6 +66,8 @@ jobs:
 
       - name: Upload DEB asset to GitHub Release
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./ropen_${{ env.tag }}_${{ matrix.arch }}.deb
@@ -74,6 +76,8 @@ jobs:
 
       - name: Upload RPM asset to GitHub Release
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./ropen-${{ env.tag }}-1.${{ matrix.arch }}.rpm
