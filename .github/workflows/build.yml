@@ -40,7 +40,7 @@ jobs:
 
       - name: Create .deb package
         run: |
-          fpm -s dir -t deb -n ropen -v ${{ env.VERSION }} -a ${{ matrix.arch }} \
+          fpm -s dir -t deb -n ropen -v ${{ env.tag }} -a ${{ matrix.arch }} \
           --description "ropen Application" \
           --license "MIT" \
           --url "https://github.com/github.com/zhanglongx/ropen" \
@@ -53,7 +53,7 @@ jobs:
 
       - name: Create .rpm package
         run: |
-          fpm -s dir -t rpm -n ropen -v ${{ env.VERSION }} -a ${{ matrix.arch }} \
+          fpm -s dir -t rpm -n ropen -v ${{ env.tag }} -a ${{ matrix.arch }} \
           --description "ropen Application" \
           --license "MIT" \
           --url "https://github.com/github.com/zhanglongx/ropen" \
