@@ -30,7 +30,7 @@ jobs:
           GOOS: linux
           GOARCH: ${{ matrix.arch }}
         run: |
-          go build -o ropen-${{ matrix.arch }}
+          CGO_ENABLED=0 go build -o ropen-${{ matrix.arch }}
 
       - name: Install FPM (Effing Package Management)
         run: |
