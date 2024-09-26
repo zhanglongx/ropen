@@ -65,7 +65,9 @@ func getIPs(prefer []string) ([]string, error) {
 		}
 	}
 
-	debug("found IPs: %v", ips)
+	if len(ips) == 0 {
+		return nil, fmt.Errorf("no valid IP addresses found")
+	}
 
 	return ips, nil
 }

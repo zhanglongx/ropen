@@ -32,10 +32,6 @@ func NewApp(cfgPath string, port int) (*App, error) {
 		return nil, err
 	}
 
-	if len(ips) == 0 {
-		return nil, fmt.Errorf("no valid IP addresses found")
-	}
-
 	return &App{
 		Config: Cfg,
 		ips:    ips,
