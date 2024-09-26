@@ -58,10 +58,18 @@ jobs:
           certs/ropenCA.crt=/etc/ropen/ropenCA.crt \
           certs/ropenCA.key=/etc/ropen/ropenCA.key
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+      - name: Upload asset to GitHub Release
+        uses: actions/upload-release-asset@v1
         with:
-          name: ropen-${{ matrix.arch }}
-          path: |
-            *.deb
-            *.rpm
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./ropen-${{ matrix.arch }}.deb
+          asset_name: ropen-${{ matrix.arch }}.deb
+          asset_content_type: application/octet-stream
+
+      - name: Upload RPM asset to GitHub Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./ropen-${{ matrix.arch }}.rpm
+          asset_name: ropen-${{ matrix.arch }}.rpm
+          asset_content_type: application/octet-stream
