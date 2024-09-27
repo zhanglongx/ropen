@@ -23,6 +23,7 @@ type Certs struct {
 }
 
 func NewCerts(caPath, keyPath string) (*Certs, error) {
+	// FIXME: PKCS1/12?
 	caCertPEM, err := os.ReadFile(caPath)
 	if err != nil {
 		return nil, err
@@ -43,7 +44,6 @@ func NewCerts(caPath, keyPath string) (*Certs, error) {
 		return nil, err
 	}
 
-	// FIXME: PKCS1 and more
 	keyBlock, _ := pem.Decode(caKeyPEM)
 	if keyBlock == nil || keyBlock.Type != "PRIVATE KEY" {
 		return nil, fmt.Errorf("failed to parse CA private key")

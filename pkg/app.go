@@ -69,7 +69,7 @@ func (a *App) Run(path string) error {
 		fmt.Printf("serving directory %s on: %s://%s/",
 			path, protocol, addr)
 
-		noCacheHandler := func(h http.Handler) http.Handler {
+		noCacheHandlerHelper := func(h http.Handler) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
 				w.Header().Set("Pragma", "no-cache")
@@ -78,7 +78,7 @@ func (a *App) Run(path string) error {
 			})
 		}
 
-		http.Handle("/", noCacheHandler(http.FileServer(http.Dir(path))))
+		http.Handle("/", noCacheHandlerHelper(http.FileServer(http.Dir(path))))
 	} else {
 		fmt.Printf("serving file %s on: %s://%s/%s",
 			path, protocol, addr, filepath.Base(path))
