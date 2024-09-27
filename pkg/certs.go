@@ -54,6 +54,7 @@ func NewCerts(caPath, keyPath string) (*Certs, error) {
 		return nil, err
 	}
 
+	// FIXME: cakey type
 	return &Certs{
 		caCert: caCert,
 		caKey:  caKey.(*rsa.PrivateKey),
