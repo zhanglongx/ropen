@@ -6,6 +6,8 @@ ropen access to directories and files and outputs this url to stdout. this featu
 
 Modern browsers are usually very careful when downloading files and will usually block file download operations if the connection is not https or if the https certificate is not available. Therefore ropen provides a ca function that generates a ca-signed integer.
 
+⚠️If user use self-signed ca certificate, they need to install the ca certificate in the operating system.
+
 ## Usage
 
 ```shell
