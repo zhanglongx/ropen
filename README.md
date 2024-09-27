@@ -45,6 +45,8 @@ issuer:
 
 - fields can be omitted. ropen will use the default value.
 
+- options from command line will override the configuration file.
+
 ## TODO
 
 - [ ] support ipv6
