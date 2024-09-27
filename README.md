@@ -29,7 +29,7 @@ ropen searches for configuration files in the following order:
 ### Configuration File
 
 ```yml
-port: 38080
+port: [38080]
 
 preferips: 
   - <ip>
@@ -42,6 +42,8 @@ issuer:
 - preferips: specify the ip address to bind to.
 
 - issuer: ca in crt and pkcs8 format.
+
+- fields can be omitted. ropen will use the default value.
 
 ## TODO
 
